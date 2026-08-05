@@ -175,7 +175,6 @@ else:
             desc = move["desc"]
             icon = move_emoji(desc)
 
-            st.markdown('<div class="move-card">', unsafe_allow_html=True)
             col_text, col_action = st.columns([4, 1])
             with col_text:
                 st.markdown(f'<div class="move-meta">{icon} {date} • {team}</div>', unsafe_allow_html=True)
@@ -187,4 +186,3 @@ else:
 
             if f"ai_{i}" in st.session_state:
                 st.info(f"🧠 {st.session_state[f'ai_{i}']}")
-            st.markdown('</div>', unsafe_allow_html=True)
