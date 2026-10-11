@@ -89,8 +89,11 @@ def analyze_move(move_text):
         if not token:
             return "Missing API key in secrets."
 
-        # Explicit model targeting supported by HF Inference Providers
-        client = InferenceClient("meta-llama/Llama-3.2-3B-Instruct", token=token)
+        # Connect directly to Hugging Face's router endpoint
+        client = InferenceClient(
+            base_url="https://router.huggingface.co/v1",
+            api_key=token
+        )
         
         prompt = (
             "You are an NBA analyst. Provide a brief, 2-sentence breakdown of the salary cap, "
@@ -102,7 +105,12 @@ def analyze_move(move_text):
             {"role": "user", "content": f"Analyze: {move_text}"}
         ]
 
-        res = client.chat_completion(messages=messages, max_tokens=100, temperature=0.3)
+        res = client.chat_completion(
+            model="Qwen/Qwen2.5-7B-Instruct",
+            messages=messages,
+            max_tokens=100,
+            temperature=0.3
+        )
         return res.choices[0].message.content
     except Exception as e:
         return f"Unable to analyze right now: {str(e)}"
