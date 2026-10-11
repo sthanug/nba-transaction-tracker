@@ -99,7 +99,7 @@ def analyze_move(move_text):
     )
 
     payload = {
-        "model": "meta-llama/Llama-3.2-3B-Instruct",
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
         "messages": [
             {"role": "system", "content": prompt},
             {"role": "user", "content": f"Analyze: {move_text}"}
