@@ -99,23 +99,22 @@ def analyze_move(move_text):
     )
 
     payload = {
-        "model": "llama-3.1-8b-instant",
+        "model": "openai/gpt-oss-20b",
         "messages": [
             {"role": "system", "content": prompt},
             {"role": "user", "content": f"Analyze: {move_text}"}
         ],
-        "max_tokens": 300,
-        "temperature": 0.3
+        "max_completion_tokens": 1024,
+        "temperature": 0.3,
+        "reasoning_format": "hidden"
     }
 
     try:
         response = requests.post(url, headers=headers, json=payload, timeout=12)
         if response.status_code == 200:
             result = response.json()
-            content = result["choices"][0]["message"]["content"]
-            if not content:
-                return "Received empty response from model."
-            return content
+            content = result["choices"][0]["message"].get("content", "")
+            return content if content else "Received empty response from model."
         else:
             return f"API Error ({response.status_code}): {response.text[:100]}"
     except Exception as e:
