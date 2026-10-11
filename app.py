@@ -89,9 +89,9 @@ def analyze_move(move_text):
         if not token:
             return "Missing API key in secrets."
 
-        # Connect directly to Hugging Face's router endpoint
+        # Explicitly routing through Hugging Face's Together AI provider integration
         client = InferenceClient(
-            base_url="https://router.huggingface.co/v1",
+            provider="together",
             api_key=token
         )
         
@@ -106,7 +106,7 @@ def analyze_move(move_text):
         ]
 
         res = client.chat_completion(
-            model="Qwen/Qwen2.5-7B-Instruct",
+            model="meta-llama/Llama-3.2-3B-Instruct",
             messages=messages,
             max_tokens=100,
             temperature=0.3
