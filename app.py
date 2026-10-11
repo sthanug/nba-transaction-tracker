@@ -83,11 +83,11 @@ def fetch_transactions():
 
 # --- AI ANALYSIS ---
 def analyze_move(move_text):
-    token = st.secrets.get("HF_TOKEN", "")
+    token = st.secrets.get("GROQ_API_KEY", "")
     if not token:
-        return "Missing API key in secrets."
+        return "Missing GROQ_API_KEY in secrets."
 
-    url = "https://router.huggingface.co/v1/chat/completions"
+    url = "https://api.groq.com/openai/v1/chat/completions"
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
@@ -99,7 +99,7 @@ def analyze_move(move_text):
     )
 
     payload = {
-        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+        "model": "llama-3.1-8b-instant",
         "messages": [
             {"role": "system", "content": prompt},
             {"role": "user", "content": f"Analyze: {move_text}"}
