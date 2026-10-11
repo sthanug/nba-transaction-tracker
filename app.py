@@ -1,6 +1,5 @@
 import requests
 import streamlit as st
-from huggingface_hub import InferenceClient
 
 st.set_page_config(
     page_title="NBA Transaction Tracker",
@@ -84,34 +83,38 @@ def fetch_transactions():
 
 # --- AI ANALYSIS ---
 def analyze_move(move_text):
-    try:
-        token = st.secrets.get("HF_TOKEN", "")
-        if not token:
-            return "Missing API key in secrets."
+    token = st.secrets.get("HF_TOKEN", "")
+    if not token:
+        return "Missing API key in secrets."
 
-        # Explicitly routing through Hugging Face's Together AI provider integration
-        client = InferenceClient(
-            provider="together",
-            api_key=token
-        )
-        
-        prompt = (
-            "You are an NBA analyst. Provide a brief, 2-sentence breakdown of the salary cap, "
-            "roster fit, or trade mechanics for this transaction. Keep it direct and natural."
-        )
+    url = "https://router.huggingface.co/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    
+    prompt = (
+        "You are an NBA analyst. Provide a brief, 2-sentence breakdown of the salary cap, "
+        "roster fit, or trade mechanics for this transaction. Keep it direct and natural."
+    )
 
-        messages = [
+    payload = {
+        "model": "meta-llama/Llama-3.2-3B-Instruct",
+        "messages": [
             {"role": "system", "content": prompt},
             {"role": "user", "content": f"Analyze: {move_text}"}
-        ]
+        ],
+        "max_tokens": 100,
+        "temperature": 0.3
+    }
 
-        res = client.chat_completion(
-            model="meta-llama/Llama-3.2-3B-Instruct",
-            messages=messages,
-            max_tokens=100,
-            temperature=0.3
-        )
-        return res.choices[0].message.content
+    try:
+        response = requests.post(url, headers=headers, json=payload, timeout=12)
+        if response.status_code == 200:
+            result = response.json()
+            return result["choices"][0]["message"]["content"]
+        else:
+            return f"API Error ({response.status_code}): {response.text[:100]}"
     except Exception as e:
         return f"Unable to analyze right now: {str(e)}"
 
