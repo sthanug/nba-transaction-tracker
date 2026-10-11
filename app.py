@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- STYLING ---
+# --- CUSTOM CSS ---
 st.markdown(
     """
     <style>
@@ -20,10 +20,37 @@ st.markdown(
             border-radius: 6px;
             font-weight: 500;
         }
+        .ai-box-orange {
+            background-color: rgba(255, 85, 0, 0.1) !important;
+            border: 1px solid #ff5500 !important;
+            color: #ffffff !important;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
     </style>
     """,
     unsafe_allow_html=True
 )
+
+
+# --- HELPER: EMOJI TAGGER ---
+def add_transaction_emoji(text):
+    text_lower = text.lower()
+    if "waive" in text_lower or "cut" in text_lower or "release" in text_lower:
+        return f"👋🏾 {text}"
+    elif "sign" in text_lower or "contract" in text_lower:
+        return f"📄 {text}"
+    elif "trade" in text_lower or "acquir" in text_lower or "deal" in text_lower:
+        return f"🔄 {text}"
+    elif "extend" in text_lower or "extension" in text_lower:
+        return f"✍️ {text}"
+    elif "injur" in text_lower or "illness" in text_lower or "out" in text_lower:
+        return f"🚑 {text}"
+    return f"📌 {text}"
 
 
 # --- DATA FETCHING ---
@@ -60,9 +87,10 @@ def analyze_move(move_text):
     try:
         token = st.secrets.get("HF_TOKEN", "")
         if not token:
-            return "Missing API key."
+            return "Missing API key in secrets."
 
-        client = InferenceClient(token=token)
+        # Explicit model targeting supported by HF Inference Providers
+        client = InferenceClient("meta-llama/Llama-3.2-3B-Instruct", token=token)
         
         prompt = (
             "You are an NBA analyst. Provide a brief, 2-sentence breakdown of the salary cap, "
@@ -80,8 +108,8 @@ def analyze_move(move_text):
         return f"Unable to analyze right now: {str(e)}"
 
 
-# --- APP INTERFACE ---
-st.title("NBA Transaction Tracker")
+# --- MAIN INTERFACE ---
+st.title("🏀 NBA Transaction Tracker")
 
 query = st.text_input("Filter moves", "", placeholder="Search team or player...").strip().lower()
 st.divider()
@@ -101,13 +129,16 @@ else:
 
             with col_text:
                 st.caption(f"{date} • {team}")
-                st.write(desc)
+                st.write(add_transaction_emoji(desc))
 
             with col_action:
                 if st.button("Analyze", key=f"btn_{i}"):
                     st.session_state[f"ai_{i}"] = analyze_move(desc)
 
             if f"ai_{i}" in st.session_state:
-                st.info(st.session_state[f"ai_{i}"])
+                st.markdown(
+                    f'<div class="ai-box-orange"><b>AI Breakdown:</b> {st.session_state[f"ai_{i}"]}</div>',
+                    unsafe_allow_html=True
+                )
 
             st.divider()
