@@ -83,7 +83,7 @@ def fetch_transactions():
 
 
 # --- AI ANALYSIS ---
-def analyze_move(team, move_text):
+def analyze_move(date, team, move_text):
     token = st.secrets.get("GROQ_API_KEY", "")
     if not token:
         return "Missing GROQ_API_KEY in secrets."
@@ -95,19 +95,19 @@ def analyze_move(team, move_text):
     }
     
     prompt = (
-        "You are a sharp NBA analyst providing a 2-sentence breakdown of this transaction. "
+        "You are a sharp NBA analyst providing a concise 2-sentence breakdown of an NBA transaction. "
         "CRITICAL RULES: "
-        "1. DO NOT guess or invent specific on-court skills (e.g., 'stretch-forward', '3-and-D', 'rim protector') for a player unless you are 100% certain of their real-life scouting report. If you don't know them, refer to them generally by their position (e.g., 'frontcourt depth' or 'backcourt prospect'). "
-        "2. Do not name other players on the team's roster. "
-        "3. Focus primarily on the roster mechanics of the move (e.g., clearing a roster spot, utilizing a training camp Exhibit 10 deal, creating flexibility). "
-        "4. Never invent veteran history or established careers for young/fringe players."
+        "1. Focus on the practical basketball and roster impact (e.g., depth management, roster flexibility, luxury tax relief, or rotation fit) based on the current point in the season. "
+        "2. Do not blindly overuse buzzwords like 'training camp' or 'Exhibit 10' unless they naturally fit the transaction and date. "
+        "3. DO NOT guess or fabricate specific player skillsets or veteran histories if you aren't certain. Refer to fringe players simply by position or general depth role. "
+        "4. DO NOT name other players on the team's roster."
     )
 
     payload = {
         "model": "openai/gpt-oss-20b",
         "messages": [
             {"role": "system", "content": prompt},
-            {"role": "user", "content": f"Team: {team}\nTransaction: {move_text}\nAnalyze the move:"}
+            {"role": "user", "content": f"Date: {date}\nTeam: {team}\nTransaction: {move_text}\nAnalyze the move:"}
         ],
         "max_completion_tokens": 1024,
         "temperature": 0.3,
@@ -150,8 +150,9 @@ else:
                 st.write(add_transaction_emoji(desc))
 
             with col_action:
+                # Passing the 'date' into the analyze_move function now
                 if st.button("Analyze", key=f"btn_{i}"):
-                    st.session_state[f"ai_{i}"] = analyze_move(team, desc)
+                    st.session_state[f"ai_{i}"] = analyze_move(date, team, desc)
 
             if f"ai_{i}" in st.session_state:
                 st.markdown(
