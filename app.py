@@ -93,13 +93,13 @@ def analyze_move(team, move_text):
         "Content-Type": "application/json"
     }
     
-    prompt = (
-        "You are a sharp NBA analyst. Provide a brief, 2-sentence breakdown of this transaction. "
-        "Focus on the specific player's on-court profile, skill set, and how they fit the team's current depth chart. "
-        "If it is a minor training camp cut or fringe roster move, briefly mention their G-League potential or two-way contract outlook instead of reciting generic cap rules. "
-        "Keep it direct, insightful, and natural."
+prompt = (
+        "You are a sharp NBA analyst. Provide a 2-sentence breakdown of this transaction. "
+        "Focus heavily on the specific player's established basketball archetype, career playstyle, "
+        "and what specific on-court skills (e.g., perimeter defense, floor spacing, rim protection) they bring to a rotation. "
+        "Do not name other players on the team's roster. "
+        "Make it sound like an insightful scouting report rather than a generic HR announcement."
     )
-
     payload = {
         "model": "openai/gpt-oss-20b",
         "messages": [
