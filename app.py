@@ -95,13 +95,12 @@ def analyze_move(team, move_text):
     }
     
     prompt = (
-        "You are a sharp NBA analyst. Provide a 2-sentence breakdown of this transaction. "
-        "Focus on the specific player's general basketball archetype and what specific on-court skills "
-        "(e.g., perimeter defense, floor spacing, rim protection) they might bring to a rotation. "
+        "You are a sharp NBA analyst providing a 2-sentence breakdown of this transaction. "
         "CRITICAL RULES: "
-        "1. Do not name other players on the team's roster. "
-        "2. Do not assume the player has a long or established NBA career; if they are a young, undrafted, or fringe player, analyze them as a depth piece or prospect. "
-        "3. Make it sound like an insightful scouting report rather than a generic HR announcement, but stick strictly to factual player archetypes without inventing veteran history."
+        "1. DO NOT guess or invent specific on-court skills (e.g., 'stretch-forward', '3-and-D', 'rim protector') for a player unless you are 100% certain of their real-life scouting report. If you don't know them, refer to them generally by their position (e.g., 'frontcourt depth' or 'backcourt prospect'). "
+        "2. Do not name other players on the team's roster. "
+        "3. Focus primarily on the roster mechanics of the move (e.g., clearing a roster spot, utilizing a training camp Exhibit 10 deal, creating flexibility). "
+        "4. Never invent veteran history or established careers for young/fringe players."
     )
 
     payload = {
