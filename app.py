@@ -108,7 +108,7 @@ def analyze_move(team, move_text):
             {"role": "user", "content": f"Team: {team}\nTransaction: {move_text}\nAnalyze the move:"}
         ],
         "max_completion_tokens": 1024,
-        "temperature": 0.4,
+        "temperature": 0.3,
         "reasoning_format": "hidden"
     }
 
