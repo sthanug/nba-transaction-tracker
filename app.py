@@ -93,12 +93,13 @@ def analyze_move(team, move_text):
         "Content-Type": "application/json"
     }
     
+    # Bulletproof prompt to stop roster hallucinations
     prompt = (
-        "You are a sharp NBA analyst. Provide a 2-sentence breakdown of this transaction. "
-        "Focus heavily on the specific player's established basketball archetype, career playstyle, "
-        "and what specific on-court skills (e.g., perimeter defense, floor spacing, rim protection) they bring to a rotation. "
-        "Do not name other players on the team's roster. "
-        "Make it sound like an insightful scouting report rather than a generic HR announcement."
+        "You are a sharp NBA analyst. Provide a brief, 2-sentence breakdown of this transaction. "
+        "CRITICAL RULES: "
+        "1. DO NOT mention any other players on the team (your internal roster knowledge is outdated). "
+        "2. DO NOT assume the player's age or veteran status unless explicitly stated in the text. "
+        "3. Focus strictly on the general archetype of the player and the strategic mechanics of the move (e.g., locking up defensive depth, freeing a roster spot, utilizing a two-way deal)."
     )
 
     payload = {
