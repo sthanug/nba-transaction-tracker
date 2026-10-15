@@ -60,7 +60,9 @@ def fetch_transactions():
         res = requests.get(url, timeout=10)
         res.raise_for_status()
         data = res.json()
-    except Exception:
+    except Exception as e:
+        # This will now display the exact error on your web app in a red box
+        st.error(f"ESPN API Connection Error: {e}")
         return []
 
     moves = []
