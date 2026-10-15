@@ -93,18 +93,19 @@ def analyze_move(team, move_text):
         "Content-Type": "application/json"
     }
     
-prompt = (
+    prompt = (
         "You are a sharp NBA analyst. Provide a 2-sentence breakdown of this transaction. "
         "Focus heavily on the specific player's established basketball archetype, career playstyle, "
         "and what specific on-court skills (e.g., perimeter defense, floor spacing, rim protection) they bring to a rotation. "
         "Do not name other players on the team's roster. "
         "Make it sound like an insightful scouting report rather than a generic HR announcement."
     )
+
     payload = {
         "model": "openai/gpt-oss-20b",
         "messages": [
             {"role": "system", "content": prompt},
-            {"role": "user", "content": f"Team: {team}\nTransaction: {move_text}\nAnalyze the player and the move:"}
+            {"role": "user", "content": f"Team: {team}\nTransaction: {move_text}\nAnalyze the move:"}
         ],
         "max_completion_tokens": 1024,
         "temperature": 0.4,
@@ -147,7 +148,6 @@ else:
                 st.write(add_transaction_emoji(desc))
 
             with col_action:
-                # Pass the team name into the analysis function
                 if st.button("Analyze", key=f"btn_{i}"):
                     st.session_state[f"ai_{i}"] = analyze_move(team, desc)
 
