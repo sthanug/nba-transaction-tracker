@@ -61,7 +61,6 @@ def fetch_transactions():
         res.raise_for_status()
         data = res.json()
     except Exception as e:
-        # This will now display the exact error on your web app in a red box
         st.error(f"ESPN API Connection Error: {e}")
         return []
 
@@ -95,7 +94,7 @@ def analyze_move(team, move_text):
         "Content-Type": "application/json"
     }
     
-   prompt = (
+    prompt = (
         "You are a sharp NBA analyst. Provide a 2-sentence breakdown of this transaction. "
         "Focus on the specific player's general basketball archetype and what specific on-court skills "
         "(e.g., perimeter defense, floor spacing, rim protection) they might bring to a rotation. "
