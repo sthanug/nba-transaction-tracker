@@ -93,23 +93,21 @@ def analyze_move(team, move_text):
         "Content-Type": "application/json"
     }
     
-    # Bulletproof prompt to stop roster hallucinations
     prompt = (
         "You are a sharp NBA analyst. Provide a brief, 2-sentence breakdown of this transaction. "
-        "CRITICAL RULES: "
-        "1. DO NOT mention any other players on the team (your internal roster knowledge is outdated). "
-        "2. DO NOT assume the player's age or veteran status unless explicitly stated in the text. "
-        "3. Focus strictly on the general archetype of the player and the strategic mechanics of the move (e.g., locking up defensive depth, freeing a roster spot, utilizing a two-way deal)."
+        "Focus on the specific player's on-court profile, skill set, and how they fit the team's current depth chart. "
+        "If it is a minor training camp cut or fringe roster move, briefly mention their G-League potential or two-way contract outlook instead of reciting generic cap rules. "
+        "Keep it direct, insightful, and natural."
     )
 
     payload = {
         "model": "openai/gpt-oss-20b",
         "messages": [
             {"role": "system", "content": prompt},
-            {"role": "user", "content": f"Team: {team}\nTransaction: {move_text}\nAnalyze the move:"}
+            {"role": "user", "content": f"Team: {team}\nTransaction: {move_text}\nAnalyze the player and the move:"}
         ],
         "max_completion_tokens": 1024,
-        "temperature": 0.3,
+        "temperature": 0.4,
         "reasoning_format": "hidden"
     }
 
@@ -149,6 +147,7 @@ else:
                 st.write(add_transaction_emoji(desc))
 
             with col_action:
+                # Pass the team name into the analysis function
                 if st.button("Analyze", key=f"btn_{i}"):
                     st.session_state[f"ai_{i}"] = analyze_move(team, desc)
 
