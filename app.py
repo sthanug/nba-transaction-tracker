@@ -79,3 +79,46 @@ def fetch_transactions():
             "desc": desc
         })
     return moves
+    
+#aianalyze
+def analyze_move(date, team, move_text):
+    token = st.secrets.get("GROQ_API_KEY", "")
+    if not token:
+        return "Missing API key."
+
+    url = "https://api.groq.com/openai/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    
+    prompt = (
+        "You are a sharp NBA analyst providing a concise 2-sentence breakdown of an NBA transaction. "
+        "CRITICAL RULES: "
+        "1. Focus on the practical basketball and roster impact (e.g., depth management, roster flexibility, luxury tax relief, or rotation fit) based on the current point in the season. "
+        "2. Do not blindly overuse buzzwords like 'training camp' or 'Exhibit 10' unless they naturally fit the transaction and date. "
+        "3. DO NOT guess or fabricate specific player skillsets or veteran histories if you aren't certain. Refer to fringe players simply by position or general depth role. "
+        "4. DO NOT name other players on the team's roster."
+    )
+
+    payload = {
+        "model": "openai/gpt-oss-20b",
+        "messages": [
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": f"Date: {date}\nTeam: {team}\nTransaction: {move_text}\nAnalyze the move:"}
+        ],
+        "max_completion_tokens": 1024,
+        "temperature": 0.3,
+        "reasoning_format": "hidden"
+    }
+
+    try:
+        response = requests.post(url, headers=headers, json=payload, timeout=12)
+        if response.status_code == 200:
+            result = response.json()
+            content = result["choices"][0]["message"].get("content", "")
+            return content if content else "Received empty response from model."
+        else:
+            return f"API Error ({response.status_code}): {response.text[:100]}"
+    except Exception as e:
+        return f"Unable to analyze right now: {str(e)}"
