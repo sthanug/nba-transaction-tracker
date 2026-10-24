@@ -102,7 +102,7 @@ prompt = (
         "5. DO NOT name other players on the team's roster."
     )
 
-    payload = {
+payload = {
         "model": "openai/gpt-oss-20b",
         "messages": [
             {"role": "system", "content": prompt},
