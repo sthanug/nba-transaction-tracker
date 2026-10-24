@@ -135,12 +135,16 @@ moves = fetch_transactions()
 if not moves:
     st.info("No recent transactions found.")
 else:
-    for i, move in enumerate(moves):
-        date = move["date"]
-        team = move["team"]
-        desc = move["desc"]
+    filtered_moves = [move for move in moves if not query or query in move["team"].lower() or query in move["desc"].lower()]
+    
+    if not filtered_moves:
+        st.warning(f"No recent transactions found matching '{query}'. Note: The tracker only pulls the 100 most recent league moves.")
+    else:
+        for i, move in enumerate(filtered_moves):
+            date = move["date"]
+            team = move["team"]
+            desc = move["desc"]
 
-        if not query or query in team.lower() or query in desc.lower():
             col_text, col_action = st.columns([4, 1])
 
             with col_text:
@@ -148,7 +152,6 @@ else:
                 st.write(add_transaction_emoji(desc))
 
             with col_action:
-                # Passing the 'date' into the analyze_move function now
                 if st.button("Analyze", key=f"btn_{i}"):
                     st.session_state[f"ai_{i}"] = analyze_move(date, team, desc)
 
