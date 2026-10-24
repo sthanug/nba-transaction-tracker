@@ -92,7 +92,7 @@ def analyze_move(date, team, move_text):
         "Content-Type": "application/json"
     }
     
-prompt = (
+    prompt = (
         "You are a sharp NBA analyst providing a concise 2-sentence breakdown of an NBA transaction. "
         "CRITICAL RULES: "
         "1. If the transaction includes specific NBA contract jargon (e.g., 'rookie-scale', 'Exhibit 10', 'two-way', 'hardship exception'), briefly define what that term means for a casual fan in the first sentence. "
@@ -102,7 +102,7 @@ prompt = (
         "5. DO NOT name other players on the team's roster."
     )
 
-payload = {
+    payload = {
         "model": "openai/gpt-oss-20b",
         "messages": [
             {"role": "system", "content": prompt},
