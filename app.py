@@ -153,7 +153,7 @@ else:
 
             if f"ai_{i}" in st.session_state:
                 st.markdown(
-                    f'<div class="ai-box-orange"><b>AI Breakdown:</b> {st.session_state[f"ai_{i}"]}</div>',
+                    f'<div class="ai-box-orange"><b>AI Analysis:</b> {st.session_state[f"ai_{i}"]}</div>',
                     unsafe_allow_html=True
                 )
 
