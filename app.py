@@ -92,13 +92,14 @@ def analyze_move(date, team, move_text):
         "Content-Type": "application/json"
     }
     
-    prompt = (
+prompt = (
         "You are a sharp NBA analyst providing a concise 2-sentence breakdown of an NBA transaction. "
         "CRITICAL RULES: "
-        "1. Focus on the practical basketball and roster impact (e.g., depth management, roster flexibility, luxury tax relief, or rotation fit) based on the current point in the season. "
-        "2. Do not blindly overuse buzzwords like 'training camp' or 'Exhibit 10' unless they naturally fit the transaction and date. "
-        "3. DO NOT guess or fabricate specific player skillsets or veteran histories if you aren't certain. Refer to fringe players simply by position or general depth role. "
-        "4. DO NOT name other players on the team's roster."
+        "1. If the transaction includes specific NBA contract jargon (e.g., 'rookie-scale', 'Exhibit 10', 'two-way', 'hardship exception'), briefly define what that term means for a casual fan in the first sentence. "
+        "2. Focus on the practical basketball and roster impact (e.g., depth management, cap space, rotation fit) based on the current point in the season. "
+        "3. Do not blindly overuse buzzwords unless they naturally fit the transaction and date. "
+        "4. DO NOT guess or fabricate specific player skillsets or veteran histories if you aren't certain. Refer to fringe players simply by position or general depth role. "
+        "5. DO NOT name other players on the team's roster."
     )
 
     payload = {
