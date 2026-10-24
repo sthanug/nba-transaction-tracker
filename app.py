@@ -122,3 +122,39 @@ def analyze_move(date, team, move_text):
             return f"API Error ({response.status_code}): {response.text[:100]}"
     except Exception as e:
         return f"Unable to analyze right now: {str(e)}"
+
+#ui
+st.title("🏀 NBA Transaction Tracker")
+
+query = st.text_input("Filter moves", "", placeholder="Search team or player...").strip().lower()
+st.divider()
+
+moves = fetch_transactions()
+
+if not moves:
+    st.info("No recent transactions found.")
+else:
+    for i, move in enumerate(moves):
+        date = move["date"]
+        team = move["team"]
+        desc = move["desc"]
+
+        if not query or query in team.lower() or query in desc.lower():
+            col_text, col_action = st.columns([4, 1])
+
+            with col_text:
+                st.caption(f"{date} • {team}")
+                st.write(add_transaction_emoji(desc))
+
+            with col_action:
+                # Passing the 'date' into the analyze_move function now
+                if st.button("Analyze", key=f"btn_{i}"):
+                    st.session_state[f"ai_{i}"] = analyze_move(date, team, desc)
+
+            if f"ai_{i}" in st.session_state:
+                st.markdown(
+                    f'<div class="ai-box-orange"><b>AI Breakdown:</b> {st.session_state[f"ai_{i}"]}</div>',
+                    unsafe_allow_html=True
+                )
+
+            st.divider()
