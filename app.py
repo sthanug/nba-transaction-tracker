@@ -111,7 +111,7 @@ def analyze_move(date, team, move_text):
             {"role": "user", "content": f"Date: {date}\nTeam: {team}\nTransaction: {move_text}\nAnalyze the move:"}
         ],
         "max_completion_tokens": 1024,
-        "temperature": 0.2,
+        "temperature": 0.0,
         "reasoning_format": "hidden"
     }
 
