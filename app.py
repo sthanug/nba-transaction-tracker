@@ -138,12 +138,17 @@ else:
     filtered_moves = [move for move in moves if not query or query in move["team"].lower() or query in move["desc"].lower()]
     
     if not filtered_moves:
-        st.warning(f"No recent transactions found matching '{query}'. Note: The tracker only pulls the 100 most recent league moves.")
+        st.markdown(
+            f'<div class="ai-box-orange"><b>No matches found for "{query}".</b><br>Note: The tracker only pulls the 100 most recent league moves.</div>', 
+            unsafe_allow_html=True
+        )
     else:
-        for i, move in enumerate(filtered_moves):
+        for move in filtered_moves:
             date = move["date"]
             team = move["team"]
             desc = move["desc"]
+            
+            move_id = f"{date}_{team}_{desc}"
 
             col_text, col_action = st.columns([4, 1])
 
@@ -152,12 +157,12 @@ else:
                 st.write(add_transaction_emoji(desc))
 
             with col_action:
-                if st.button("Analyze", key=f"btn_{i}"):
-                    st.session_state[f"ai_{i}"] = analyze_move(date, team, desc)
+                if st.button("Analyze", key=f"btn_{move_id}"):
+                    st.session_state[f"ai_{move_id}"] = analyze_move(date, team, desc)
 
-            if f"ai_{i}" in st.session_state:
+            if f"ai_{move_id}" in st.session_state:
                 st.markdown(
-                    f'<div class="ai-box-orange"><b>AI Analysis:</b> {st.session_state[f"ai_{i}"]}</div>',
+                    f'<div class="ai-box-orange"><b>AI Analysis:</b> {st.session_state[f"ai_{move_id}"]}</div>',
                     unsafe_allow_html=True
                 )
 
