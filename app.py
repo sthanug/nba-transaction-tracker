@@ -97,9 +97,11 @@ def analyze_move(date, team, move_text):
         "CRITICAL RULES: "
         "1. If the transaction includes specific NBA contract jargon (e.g., 'rookie-scale', 'Exhibit 10', 'two-way', 'hardship exception'), briefly define what that term means for a casual fan in the first sentence. "
         "2. Focus on the practical basketball and roster impact (e.g., depth management, cap space, rotation fit) based on the current point in the season. "
-        "3. Do not blindly overuse buzzwords unless they naturally fit the transaction and date. "
+        "3. DO NOT blindly overuse buzzwords unless they naturally fit the transaction and date. "
         "4. DO NOT guess or fabricate specific player skillsets or veteran histories if you aren't certain. Refer to fringe players simply by position or general depth role. "
         "5. DO NOT name other players on the team's roster."
+        "6. DO NOT mention salary cap space unless an explicit dollar amount is in the input text. Waiving training camp players or signing two-way contracts DOES NOT create salary cap space."
+        
     )
 
     payload = {
