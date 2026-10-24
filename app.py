@@ -101,6 +101,7 @@ def analyze_move(date, team, move_text):
         "4. DO NOT guess or fabricate specific player skillsets or veteran histories if you aren't certain. Refer to fringe players simply by position or general depth role. "
         "5. DO NOT name other players on the team's roster."
         "6. DO NOT mention salary cap space unless an explicit dollar amount is in the input text. Waiving training camp players or signing two-way contracts DOES NOT create salary cap space."
+        "7. DO NOT assume that waiving a player opens room for another."
         
     )
 
